@@ -1,7 +1,7 @@
 import React, {Component} from "react";
-import {Image, View, Platform, TouchableOpacity, FlatList, ScrollView, Share, WebView} from "react-native";
+import {Image, View, Platform, TouchableOpacity, FlatList, ScrollView, Share, WebView, TextInput} from "react-native";
 
-import {Container, Content, Button, Text, Header, Title, Body, Left, Right, Icon, Picker, Item} from "native-base";
+import {Container, Content, Button, Text, Icon, Picker, Item} from "native-base";
 
 import BaseScreen from "../../base/BaseScreen.js";
 import common_styles from "../../../css/common";
@@ -24,10 +24,11 @@ class Home extends BaseScreen {
         data_list: [],
         filter_list: [
           {key: 'name', value:'성명'},
-          {key: 'name', value:'관리번호'},
-          {key: 'name', value:'소속'}
+          {key: 'num', value:'관리번호'},
+          {key: 'company', value:'소속'}
         ],      //for searching
-        filter_value: '성명'   //default
+        filter_key: 'name',   //default
+        keyword: ''
   		};
   	}
     //
@@ -62,10 +63,15 @@ class Home extends BaseScreen {
     //
     //handle actions when user changes city
     _filter_list_change(itemValue, itemIndex){
+      Utils.dlog(itemValue);
     	this.setState({
-    		filter_value: itemValue
+    		filter_key: itemValue
     	});
     }
+    //
+    _begin_search = () => {
+
+    };
    //==========
     render() {
       {/* define how to render country list */}
@@ -76,28 +82,45 @@ class Home extends BaseScreen {
         return (
           <Container padder>
             <Content>
-              <View style={styles.header}>
+              <ScrollView horizontal={true} showsHorizontalScrollIndicator={true}>
+              <View style={{flexDirection: 'row', marginTop:20}}>
                 <View style={styles.left}>
-                  <Text style={{fontWeight:'bold', fontSize:24}}>eventplant</Text>
-                  <Text>이벤트응모수({this.state.count})</Text>
-                  <View style={{}}>
-                  <Picker
-                    note
-                    iosHeader="Select one"
-                    mode="dropdown"
-                    name="picker_filter"
-                    selectedValue={this.state.filter_value}
-                    onValueChange={this._filter_list_change.bind(this)}
-                    >
-                    {filter_list}
-                  </Picker>
+                  <Text style={{fontWeight:'bold', fontSize:24, marginLeft:20}}>eventplant</Text>
+                  <Text style={{marginLeft:20}}>이벤트응모수({this.state.count})</Text>
+                  <View style={{flexDirection:'row'}}>
+                    <Picker
+                      note
+                      iosHeader="Select one"
+                      mode="dropdown"
+                      name="picker_filter"
+                      selectedValue={this.state.filter_key}
+                      onValueChange={this._filter_list_change.bind(this)}
+                      style={{marginLeft:10}}
+                      >
+                      {filter_list}
+                    </Picker>
+                    <Icon name="md-arrow-dropdown" style={{marginTop:5}}/>
+                    <TextInput style={{borderBottomColor:'#5499C7', borderBottomWidth:1, width:160, marginLeft:10, marginRight:10}}
+                     autoCapitalize="none" onChange={(event) => this.setState({keyword: event.nativeEvent.text})}/>
+                     <TouchableOpacity onPress={()=>this._begin_search()}
+                       style={{width:80, height: 50, backgroundColor: '#ccc',justifyContent: 'center', alignItems: 'center', borderRadius:6}}>
+                       <Text>검색</Text>
+                     </TouchableOpacity>
                   </View>
                 </View>
-                <View style={styles.middle}>
-
+                <View style={{flexDirection: 'column', marginLeft: 20}}>
+                  <TouchableOpacity onPress={()=>this._begin_search()}
+                    style={{width:100, height: 50, backgroundColor: '#555',justifyContent: 'center', alignItems: 'center', borderRadius:6}}>
+                    <Text>바코드스캔</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={()=>this._begin_search()}
+                    style={{width:100, height: 50, backgroundColor: '#555',justifyContent: 'center', alignItems: 'center', borderRadius:6, marginTop:2}}>
+                    <Text>통계보기</Text>
+                  </TouchableOpacity>
                 </View>
-                <View style={styles.right}>
-
+                <View style={{justifyContent:'center', alignItems: 'center', marginLeft:10}}>
+                  <Text>화면을 아래로 내리면</Text>
+                  <Text>DB가 새로고침 됩니다.</Text>
                 </View>
               </View>
               <View style={styles.header_table}>
@@ -106,6 +129,7 @@ class Home extends BaseScreen {
               <View style={styles.table}>
 
               </View>
+              </ScrollView>
             </Content>
           </Container>
         );
