@@ -34,8 +34,11 @@ class Login extends BaseScreen {
   }
   //
   _begin_login = () => {
-    if (Utils.isEmpty(this.state.id) && Utils.isEmpty(this.state.id)){
+    if (Utils.isEmpty(this.state.id) && Utils.isEmpty(this.state.password)){
       Toast.show('로그인 실패! 확인 후 다시 로그인해주세요');
+    } else {
+      link = 'http://eventplant.cafe24.com/app/insert.php?b_id='+this.state.id+'&b_pw='+this.state.password;
+      this.props.navigation.navigate('Home', {link: link});
     }
   }
    //==========

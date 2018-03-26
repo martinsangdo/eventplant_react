@@ -23,7 +23,6 @@ import store from 'react-native-simple-store';
 import BaseScreen from "./js/base/BaseScreen";
 import Login from "./js/screen/login";
 import Home from "./js/screen/home";
-import Viewer from "./js/screen/viewer";
 
 const AppNavigator = StackNavigator({
         BaseScreen: {screen: BaseScreen},
