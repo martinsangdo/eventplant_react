@@ -30,10 +30,10 @@ const AppNavigator = StackNavigator({
         Home: {screen: Home},
     },
     {
-        initialRouteName: "Login",   //open this page first time
+        initialRouteName: "Home",   //open this page first time
         headerMode: "none",
         cardStyle: {
-          paddingTop: 0,
+          paddingTop: 20, //iOS
           backgroundColor: '#fff'
         }
     });
