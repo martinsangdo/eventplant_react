@@ -11,6 +11,7 @@ import Utils from "../../utils/functions";
 import {C_Const} from '../../utils/constant';
 import RequestData from '../../utils/https/RequestData';
 import Toast from 'react-native-root-toast';
+import store from 'react-native-simple-store';
 
 const launchscreenLogo = require("../../../img/ep_logo.png");
 
@@ -19,7 +20,8 @@ class Login extends BaseScreen {
     super(props);
     this.state = {
       id: '',
-      password: ''
+      password: '',
+      submitting: false
     };
   }
     //like onload event
@@ -34,11 +36,28 @@ class Login extends BaseScreen {
   }
   //
   _begin_login = () => {
+    if (this.state.submitting){
+      return;
+    }
     if (Utils.isEmpty(this.state.id) && Utils.isEmpty(this.state.password)){
       Toast.show('로그인 실패! 확인 후 다시 로그인해주세요');
     } else {
-      link = 'http://eventplant.cafe24.com/app/insert.php?b_id='+this.state.id+'&b_pw='+this.state.password;
-      this.props.navigation.navigate('Home', {link: link});
+      //submit to get data
+      var uri = 'http://eventplant.cafe24.com/app/insert.php?b_id='+this.state.id+'&b_pw='+this.state.password;
+      this.setState({submitting: true});
+      RequestData.sentGetRequest(uri, (response, error) => {
+        if (response && !Utils.isEmpty(response.results)){
+          //success
+          store.update(C_Const.STORE_KEY.USER_INFO, response.results); //save user info to Store
+          setTimeout(() => {
+            // Utils.dlog(response.results);
+            this.props.navigation.navigate('Home', {user_info: response.results});
+          }, 1000);
+        } else {
+          Toast.show('로그인 실패! 확인 후 다시 로그인해주세요');
+        }
+        this.setState({submitting: false});
+      });
     }
   }
    //==========

@@ -14,21 +14,41 @@ import {C_Const, C_MULTI_LANG} from '../../utils/constant';
 import RequestData from '../../utils/https/RequestData';
 import Spinner from 'react-native-loading-spinner-overlay';
 
-class Timeline extends BaseScreen {
+class Home extends BaseScreen {
     constructor(props) {
   		super(props);
   		this.state = {
-
+        count: 0,
+        data_list: []
   		};
   	}
     //
     componentDidMount() {
-
+      this._load_data();
     }
     //
-    _onNavigationStateChange = (event) => {
-  		Utils.dlog('_onNavigationStateChange '+event.url);
-
+    _load_data = () => {
+      Utils.dlog(this.props.navigation.state.params);
+      var uri = 'http://eventplant.cafe24.com/app/appdata.php?cam_idx='+
+          this.props.navigation.state.params.user_info.cam_idx+'&b_id='+
+          this.props.navigation.state.params.user_info.b_id;
+      RequestData.sentGetRequest(uri, (response, error) => {
+        // Utils.dlog(response);
+        if (!Utils.isEmpty(response) && !Utils.isEmpty(response.results)){
+          //success
+          var list = response.results;
+          var total = list.length;
+          this.setState({count: response.counts});
+          for (var i=0; i<total; i++){
+            if (list[i]['b_num'] != '미응모'){
+              this.state.data_list.push(list[i]);
+            }
+          }
+          Utils.dlog(this.state.data_list);
+        } else {
+          //something wrong
+        }
+      });
   	};
    //==========
     render() {
@@ -37,14 +57,7 @@ class Timeline extends BaseScreen {
             <Content>
                 <View style={styles.map_container}>
                   <View style ={styles.container}>
-                    <WebView
-                      ref={'WEBVIEW_REF'}
-                      source={{uri: this.props.navigation.state.params.link}}
-                      style={styles.webview}
-                      onLoadEnd={this._close_spinner}
-                      onLoadStart={this._start_spinner}
-                      onNavigationStateChange={this._onNavigationStateChange}
-                    />
+
                 </View>
               </View>
             </Content>
@@ -53,4 +66,4 @@ class Timeline extends BaseScreen {
     }
 }
 
-export default Timeline;
+export default Home;
