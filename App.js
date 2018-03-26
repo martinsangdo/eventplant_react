@@ -1,58 +1,58 @@
 /**
- * Sample React Native App
- * https://github.com/facebook/react-native
- * @flow
+ * Event Plant
+ * author: Martin SangDo
  */
-
-import React, { Component } from 'react';
+import React, {Component} from 'react';
+import {Root, Icon, Badge} from "native-base";
 import {
-  Platform,
-  StyleSheet,
-  Text,
-  View
+    Platform,
+    StyleSheet,
+    Text,
+    View
 } from 'react-native';
 
-const instructions = Platform.select({
-  ios: 'Press Cmd+R to reload,\n' +
-    'Cmd+D or shake for dev menu',
-  android: 'Double tap R on your keyboard to reload,\n' +
-    'Shake or press menu button for dev menu',
-});
+import {
+    StackNavigator
+} from 'react-navigation';
+import common_styles from "./css/common";
+import {C_Const, C_MULTI_LANG} from './js/utils/constant';
+import Utils from "./js/utils/functions";
 
-type Props = {};
-export default class App extends Component<Props> {
+import store from 'react-native-simple-store';
+//define screens
+import BaseScreen from "./js/base/BaseScreen";
+import Login from "./js/screen/login";
+import Home from "./js/screen/home";
+import Viewer from "./js/screen/viewer";
+
+const AppNavigator = StackNavigator({
+        BaseScreen: {screen: BaseScreen},
+        Login: {screen: Login},
+        Home: {screen: Home},
+    },
+    {
+        initialRouteName: "Login",   //open this page first time
+        headerMode: "none",
+        cardStyle: {
+          paddingTop: 0,
+          backgroundColor: '#fff'
+        }
+    });
+
+export default class App extends Component{
+  constructor(props) {
+    super(props);
+  }
+
+  componentDidMount() {
+    console.ignoredYellowBox = ['Remote debugger'];   //don't show warning in app when debugging
+  }
+  //
   render() {
     return (
-      <View style={styles.container}>
-        <Text style={styles.welcome}>
-          Welcome to React Native!
-        </Text>
-        <Text style={styles.instructions}>
-          To get started, edit App.js
-        </Text>
-        <Text style={styles.instructions}>
-          {instructions}
-        </Text>
-      </View>
-    );
+      <Root>
+          <AppNavigator/>
+      </Root>
+    )
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },
-});
