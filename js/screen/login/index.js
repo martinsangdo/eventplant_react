@@ -10,6 +10,7 @@ import styles from "./style";    //CSS defined here
 import Utils from "../../utils/functions";
 import {C_Const} from '../../utils/constant';
 import RequestData from '../../utils/https/RequestData';
+import Toast from 'react-native-root-toast';
 
 const launchscreenLogo = require("../../../img/ep_logo.png");
 
@@ -30,6 +31,12 @@ class Login extends BaseScreen {
 		if (this.refs[ref] != null){
 			this.refs[ref].focus();
 		}
+  }
+  //
+  _begin_login = () => {
+    if (Utils.isEmpty(this.state.id) && Utils.isEmpty(this.state.id)){
+      Toast.show('로그인 실패! 확인 후 다시 로그인해주세요');
+    }
   }
    //==========
     render() {
