@@ -157,17 +157,43 @@ class Home extends BaseScreen {
         return;
       }
       this.setState({loading_indicator_state: true});
-      if (this.stat){
-
-      }
-      //query results
+      var where = this.state.filter_key + ' LIKE "%'+this.state.keyword+'%"';
+      var me = this;
       db.transaction(function (txn) {
-        txn.executeSql('SELECT * FROM `visitor` where ', [], function (tx, res) {
-          Utils.xlog('results', res);
-
-        }, function(aaa, bbb){
-          // Utils.xlog('aaa', aaa);
-          // Utils.xlog('bbb', bbb);
+        var sql = 'SELECT * FROM `visitor` WHERE event<>"미응모" AND '+where+' ORDER BY event DESC';
+        txn.executeSql(sql, [], function (tx, res) {
+          Utils.xlog('list', res.rows._array);
+          var list = res.rows._array;
+          var total = list.length;
+          if (total == 0){
+            //not found
+            Toast.show('Not found');
+          } else {
+            //found
+            //clear displaying list
+            me.setState({data_list: [{
+              index: '순번',
+              num: '관리번호',
+              name: '성명',
+              jtype: '등록구분',
+              company: '소속',
+              event: '이벤트응모',
+              department: '부서',
+              position: '직위',
+              phone: 'HP',
+              tel: 'Tel',
+              email: 'Email'
+            }]});
+            var idx = total;
+            for (var i=0; i<total; i++){
+              list[i]['index'] = idx--;
+              me.state.data_list.push(list[i]);
+            }
+          }
+          me.setState({loading_indicator_state: false});
+        }, function(err, detail){
+          me.setState({loading_indicator_state: false});
+          Utils.dlog(detail);
         });
       });
 
