@@ -10,5 +10,9 @@ const deviceHeight = Dimensions.get("window").height;
 
 export default {
   header: {padding: 20},
-
+  webview: {
+    flex:1, width:'100%', minWidth:deviceWidth,
+    minHeight:deviceHeight-80, //why 80???
+    height:'100%'
+  }
 };

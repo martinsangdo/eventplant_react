@@ -50,8 +50,7 @@ class Login extends BaseScreen {
           //success
           store.update(C_Const.STORE_KEY.USER_INFO, response.results); //save user info to Store
           setTimeout(() => {
-            // Utils.dlog(response.results);
-            this.props.navigation.navigate('Home', {user_info: response.results});
+            this._navigateTo('Home');
           }, 1000);
         } else {
           Toast.show('로그인 실패! 확인 후 다시 로그인해주세요');

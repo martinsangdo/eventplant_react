@@ -23,11 +23,13 @@ import store from 'react-native-simple-store';
 import BaseScreen from "./js/base/BaseScreen";
 import Login from "./js/screen/login";
 import Home from "./js/screen/home";
+import Statistic from "./js/screen/home/statistic";
 
 const AppNavigator = StackNavigator({
         BaseScreen: {screen: BaseScreen},
         Login: {screen: Login},
         Home: {screen: Home},
+        Statistic: {screen: Statistic}
     },
     {
         initialRouteName: "Home",   //open this page first time

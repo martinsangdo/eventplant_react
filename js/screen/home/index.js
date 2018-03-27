@@ -8,6 +8,7 @@ import common_styles from "../../../css/common";
 import styles from "./style";    //CSS defined here
 import {API_URI} from '../../utils/api_uri';
 import store from 'react-native-simple-store';
+import Toast from 'react-native-root-toast';
 
 import Utils from "../../utils/functions";
 import {C_Const, C_MULTI_LANG} from '../../utils/constant';
@@ -28,19 +29,30 @@ class Home extends BaseScreen {
           {key: 'company', value:'소속'}
         ],      //for searching
         filter_key: 'name',   //default
-        keyword: ''
+        keyword: '',
+        user_info: 0
   		};
   	}
     //
     componentDidMount() {
+      store.get(C_Const.STORE_KEY.USER_INFO)
+      		.then(user_info => {
+      			if (user_info != null){
+              Utils.xlog('saved user info', user_info);
+      				this.setState({
+      					user_info: user_info
+      				}, () => this._load_data());
+      			} else {
+              //cannot get user info
+
+            }
+      });
       // this._load_data();
     }
     //
     _load_data = () => {
-      Utils.dlog(this.props.navigation.state.params);
       var uri = 'http://eventplant.cafe24.com/app/appdata.php?cam_idx='+
-          this.props.navigation.state.params.user_info.cam_idx+'&b_id='+
-          this.props.navigation.state.params.user_info.b_id;
+          this.state.user_info.cam_idx+'&b_id='+this.state.user_info.b_id;
       RequestData.sentGetRequest(uri, (response, error) => {
         // Utils.dlog(response);
         if (!Utils.isEmpty(response) && !Utils.isEmpty(response.results)){
@@ -53,8 +65,8 @@ class Home extends BaseScreen {
               this.state.data_list.push(list[i]);
             }
           }
+          Toast.show(this.state.user_info.b_name+'님 환영합니다');
           Utils.dlog(this.state.data_list);
-          //todo: show toast welcome, b_name
         } else {
           //something wrong
         }
@@ -71,6 +83,13 @@ class Home extends BaseScreen {
     //
     _begin_search = () => {
 
+    };
+    //
+    _open_statistic = () => {
+      this.props.navigation.navigate('Statistic', {
+        link: 'http://eventplant.cafe24.com/app/stats.html?cam_idx='+
+            this.state.cam_idx+'&b_id='+this.state.b_id
+      });
     };
    //==========
     render() {
@@ -109,11 +128,11 @@ class Home extends BaseScreen {
                   </View>
                 </View>
                 <View style={{flexDirection: 'column', marginLeft: 20}}>
-                  <TouchableOpacity onPress={()=>this._begin_search()}
+                  <TouchableOpacity onPress={()=>this._open_scanner()}
                     style={{width:100, height: 50, backgroundColor: '#555',justifyContent: 'center', alignItems: 'center', borderRadius:6}}>
                     <Text>바코드스캔</Text>
                   </TouchableOpacity>
-                  <TouchableOpacity onPress={()=>this._begin_search()}
+                  <TouchableOpacity onPress={()=>this._open_statistic()}
                     style={{width:100, height: 50, backgroundColor: '#555',justifyContent: 'center', alignItems: 'center', borderRadius:6, marginTop:2}}>
                     <Text>통계보기</Text>
                   </TouchableOpacity>
