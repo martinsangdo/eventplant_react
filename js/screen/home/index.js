@@ -22,7 +22,19 @@ class Home extends BaseScreen {
   		super(props);
   		this.state = {
         count: 0,
-        data_list: [],
+        data_list: [{
+          index: '순번',
+          num: '관리번호',
+          name: '성명',
+          jtype: '등록구분',
+          company: '소속',
+          b_num: '이벤트응모',
+          department: '부서',
+          position: '직위',
+          phone: 'HP',
+          tel: 'Tel',
+          email: 'Email'
+        }],
         filter_list: [
           {key: 'name', value:'성명'},
           {key: 'num', value:'관리번호'},
@@ -60,8 +72,10 @@ class Home extends BaseScreen {
           var list = response.results;
           var total = list.length;
           this.setState({count: response.counts});
+          var idx = response.counts;
           for (var i=0; i<total; i++){
             if (list[i]['b_num'] != '미응모'){
+              list[i]['index'] = idx--;
               this.state.data_list.push(list[i]);
             }
           }
@@ -91,6 +105,31 @@ class Home extends BaseScreen {
             this.state.cam_idx+'&b_id='+this.state.b_id
       });
     };
+    //
+    _load_more = () => {};
+    //
+    _refresh_list = () => {
+      Utils.dlog('_refresh_list');
+    };
+    //
+    //
+    _keyExtractor = (item) => item.index;
+  	//render the list. MUST use "item" as param
+  	_renderItem = ({item}) => (
+  			<View style={[styles.list_item, (item.index=='순번'?common_styles.grayBg:(item.index%2==1?common_styles.litegrayBg:common_styles.whiteBg))]}>
+          <Text style={[common_styles.justifyCenter, {width:50}]}>{item.index}</Text>
+          <Text style={[common_styles.justifyCenter, {width:100}]}>{item.num}</Text>
+          <Text style={[common_styles.justifyCenter, {width:100}]}>{item.name}</Text>
+          <Text style={[common_styles.justifyCenter, {width:100}]}>{item.jtype}</Text>
+          <Text style={[common_styles.justifyCenter, {width:150}]}>{item.company}</Text>
+          <Text style={[common_styles.justifyCenter, {width:200}]}>{item.b_num}</Text>
+          <Text style={[common_styles.justifyCenter, {width:100}]}>{item.department}</Text>
+          <Text style={[common_styles.justifyCenter, {width:80}]}>{item.position}</Text>
+          <Text style={[common_styles.justifyCenter, {width:80}]}>{item.phone}</Text>
+          <Text style={[common_styles.justifyCenter, {width:80}]}>{item.tel}</Text>
+          <Text style={[common_styles.justifyCenter, {width:80}]}>{item.email}</Text>
+  			</View>
+    );
    //==========
     render() {
       {/* define how to render country list */}
@@ -100,56 +139,62 @@ class Home extends BaseScreen {
 
         return (
           <Container padder>
-            <Content>
               <ScrollView horizontal={true} showsHorizontalScrollIndicator={true}>
-              <View style={{flexDirection: 'row', marginTop:20}}>
-                <View style={styles.left}>
-                  <Text style={{fontWeight:'bold', fontSize:24, marginLeft:20}}>eventplant</Text>
-                  <Text style={{marginLeft:20}}>이벤트응모수({this.state.count})</Text>
-                  <View style={{flexDirection:'row'}}>
-                    <Picker
-                      note
-                      iosHeader="Select one"
-                      mode="dropdown"
-                      name="picker_filter"
-                      selectedValue={this.state.filter_key}
-                      onValueChange={this._filter_list_change.bind(this)}
-                      style={{marginLeft:10}}
-                      >
-                      {filter_list}
-                    </Picker>
-                    <Icon name="md-arrow-dropdown" style={{marginTop:5}}/>
-                    <TextInput style={{borderBottomColor:'#5499C7', borderBottomWidth:1, width:160, marginLeft:10, marginRight:10}}
-                     autoCapitalize="none" onChange={(event) => this.setState({keyword: event.nativeEvent.text})}/>
-                     <TouchableOpacity onPress={()=>this._begin_search()}
-                       style={{width:80, height: 50, backgroundColor: '#ccc',justifyContent: 'center', alignItems: 'center', borderRadius:6}}>
-                       <Text>검색</Text>
-                     </TouchableOpacity>
+                <View style={{flexDirection: 'row', marginTop:20}}>
+                  <View style={styles.left}>
+                    <Text style={{fontWeight:'bold', fontSize:24, marginLeft:20}}>eventplant</Text>
+                    <Text style={{marginLeft:20}}>이벤트응모수({this.state.count})</Text>
+                    <View style={{flexDirection:'row'}}>
+                      <Picker
+                        note
+                        iosHeader="Select one"
+                        mode="dropdown"
+                        name="picker_filter"
+                        selectedValue={this.state.filter_key}
+                        onValueChange={this._filter_list_change.bind(this)}
+                        style={{marginLeft:10}}
+                        >
+                        {filter_list}
+                      </Picker>
+                      <Icon name="md-arrow-dropdown" style={{marginTop:5}}/>
+                      <TextInput style={{borderBottomColor:'#5499C7', borderBottomWidth:1, width:160, marginLeft:10, marginRight:10}}
+                       autoCapitalize="none" onChange={(event) => this.setState({keyword: event.nativeEvent.text})}/>
+                       <TouchableOpacity onPress={()=>this._begin_search()}
+                         style={{width:80, height: 50, backgroundColor: '#ccc',justifyContent: 'center', alignItems: 'center', borderRadius:6}}>
+                         <Text>검색</Text>
+                       </TouchableOpacity>
+                    </View>
+                  </View>
+                  <View style={{flexDirection: 'column', marginLeft: 20}}>
+                    <TouchableOpacity onPress={()=>this._open_scanner()}
+                      style={{width:100, height: 50, backgroundColor: '#555',justifyContent: 'center', alignItems: 'center', borderRadius:6}}>
+                      <Text>바코드스캔</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={()=>this._open_statistic()}
+                      style={{width:100, height: 50, backgroundColor: '#555',justifyContent: 'center', alignItems: 'center', borderRadius:6, marginTop:2}}>
+                      <Text>통계보기</Text>
+                    </TouchableOpacity>
+                  </View>
+                  <View style={{justifyContent:'center', alignItems: 'center', marginLeft:10}}>
+                    <Text>화면을 아래로 내리면</Text>
+                    <Text>DB가 새로고침 됩니다.</Text>
                   </View>
                 </View>
-                <View style={{flexDirection: 'column', marginLeft: 20}}>
-                  <TouchableOpacity onPress={()=>this._open_scanner()}
-                    style={{width:100, height: 50, backgroundColor: '#555',justifyContent: 'center', alignItems: 'center', borderRadius:6}}>
-                    <Text>바코드스캔</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity onPress={()=>this._open_statistic()}
-                    style={{width:100, height: 50, backgroundColor: '#555',justifyContent: 'center', alignItems: 'center', borderRadius:6, marginTop:2}}>
-                    <Text>통계보기</Text>
-                  </TouchableOpacity>
-                </View>
-                <View style={{justifyContent:'center', alignItems: 'center', marginLeft:10}}>
-                  <Text>화면을 아래로 내리면</Text>
-                  <Text>DB가 새로고침 됩니다.</Text>
-                </View>
-              </View>
-              <View style={styles.header_table}>
-
-              </View>
-              <View style={styles.table}>
-
-              </View>
               </ScrollView>
-            </Content>
+
+              <ScrollView horizontal={true} showsHorizontalScrollIndicator={true}>
+                    <FlatList
+                      data={this.state.data_list}
+                      renderItem={this._renderItem}
+                      refreshing={false}
+                      initialNumToRender={10}
+                      onRefresh={() => this._refresh_list()}
+                      onEndReachedThreshold={0.5}
+                      keyExtractor={this._keyExtractor}
+                      style={styles.data_table}
+                      onEndReached={({ distanceFromEnd }) => this._load_more()}
+                    />
+              </ScrollView>
           </Container>
         );
     }

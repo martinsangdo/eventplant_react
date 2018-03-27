@@ -14,5 +14,8 @@ export default {
     flex:1, width:'100%', minWidth:deviceWidth,
     minHeight:deviceHeight-80, //why 80???
     height:'100%'
-  }
+  },
+  header_table: {backgroundColor: '#ccc', flexDirection: 'row'},
+  list_item: {flexDirection: 'row'},
+  data_table: {flexDirection: 'row'}
 };
