@@ -242,7 +242,7 @@ class Home extends BaseScreen {
           <Spinner visible={this.state.loading_indicator_state} textStyle={common_styles.whiteColor} />
 
               <ScrollView horizontal={true} showsHorizontalScrollIndicator={true}>
-                <View style={{flexDirection: 'row', marginTop:20}}>
+                <View style={{flexDirection: 'row', marginTop:20, marginBottom:30}}>
                   <View style={styles.left}>
                     <Text style={{fontWeight:'bold', fontSize:24, marginLeft:20}}>eventplant</Text>
                     <Text style={{marginLeft:20}}>이벤트응모수({this.state.count})</Text>
@@ -293,7 +293,6 @@ class Home extends BaseScreen {
                       onRefresh={() => this._refresh_list()}
                       onEndReachedThreshold={0.5}
                       keyExtractor={this._keyExtractor}
-                      style={styles.data_table}
                       onEndReached={({ distanceFromEnd }) => this._load_more()}
                     />
               </ScrollView>
