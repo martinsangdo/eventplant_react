@@ -32,7 +32,7 @@ class Home extends BaseScreen {
           name: '성명',
           jtype: '등록구분',
           company: '소속',
-          b_num: '이벤트응모',
+          event: '이벤트응모',
           department: '부서',
           position: '직위',
           phone: 'HP',
@@ -44,7 +44,7 @@ class Home extends BaseScreen {
           {key: 'num', value:'관리번호'},
           {key: 'company', value:'소속'}
         ],      //for searching
-        filter_key: 'name',   //default
+        filter_key: 'name',   //default selecting
         keyword: '',
         user_info: 0,
         loading_indicator_state: true
@@ -74,22 +74,12 @@ class Home extends BaseScreen {
         // Utils.dlog(response);
         if (!Utils.isEmpty(response) && !Utils.isEmpty(response.results)){
           //success
-          var list = response.results;
-          var total = list.length;
-          this.setState({count: response.counts});
-          var idx = response.counts;
-          for (var i=0; i<total; i++){
-            if (list[i]['b_num'] != '미응모'){
-              list[i]['index'] = idx--;
-              this.state.data_list.push(list[i]);
-            }
-          }
           //insert into local db
-          this._save_data_2_db(list);
+          this._save_data_2_db(response.results);
+          this._get_data_list_from_db();
           //
           Toast.show(this.state.user_info.b_name+'님 환영합니다');
 
-          Utils.dlog(this.state.data_list);
         } else {
           //something wrong
         }
@@ -133,18 +123,26 @@ class Home extends BaseScreen {
                                 // Utils.xlog('insert table error', error);
                               });
                 }
-          // txn.executeSql('SELECT * FROM `visitor`', [], function (tx, res) {
-          //   Utils.xlog('222', res);
-            // for (let i = 0; i < res.rows.length; ++i) {
-            //   console.log('item:', res.rows.item(i));
-            // }
-          // }, function(aaa, bbb){
-            // Utils.xlog('aaa', aaa);
-            // Utils.xlog('bbb', bbb);
-          // });
       });
     };
-    //
+    //sort by event date
+    _get_data_list_from_db = () => {
+      var me = this;
+      db.transaction(function (txn) {
+        txn.executeSql('SELECT * FROM `visitor` WHERE event<>"미응모" ORDER BY event DESC', [], function (tx, res) {
+          Utils.xlog('list', res.rows._array);
+          var list = res.rows._array;
+          var total = list.length;
+          me.setState({count: total});
+          var idx = total;
+          for (var i=0; i<total; i++){
+            list[i]['index'] = idx--;
+            me.state.data_list.push(list[i]);
+          }
+        }, function(err, detail){
+        });
+      });
+    };
     //handle actions when user changes city
     _filter_list_change(itemValue, itemIndex){
       Utils.dlog(itemValue);
@@ -154,6 +152,24 @@ class Home extends BaseScreen {
     }
     //
     _begin_search = () => {
+      if (Utils.isEmpty(this.state.keyword)){
+        Toast.show('Must type something');
+        return;
+      }
+      this.setState({loading_indicator_state: true});
+      if (this.stat){
+
+      }
+      //query results
+      db.transaction(function (txn) {
+        txn.executeSql('SELECT * FROM `visitor` where ', [], function (tx, res) {
+          Utils.xlog('results', res);
+
+        }, function(aaa, bbb){
+          // Utils.xlog('aaa', aaa);
+          // Utils.xlog('bbb', bbb);
+        });
+      });
 
     };
     //
@@ -180,7 +196,7 @@ class Home extends BaseScreen {
           <Text style={[common_styles.justifyCenter, {width:100}]}>{item.name}</Text>
           <Text style={[common_styles.justifyCenter, {width:100}]}>{item.jtype}</Text>
           <Text style={[common_styles.justifyCenter, {width:150}]}>{item.company}</Text>
-          <Text style={[common_styles.justifyCenter, {width:200}]}>{item.b_num}</Text>
+          <Text style={[common_styles.justifyCenter, {width:200}]}>{item.event}</Text>
           <Text style={[common_styles.justifyCenter, {width:100}]}>{item.department}</Text>
           <Text style={[common_styles.justifyCenter, {width:80}]}>{item.position}</Text>
           <Text style={[common_styles.justifyCenter, {width:80}]}>{item.phone}</Text>
