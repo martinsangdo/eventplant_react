@@ -14,8 +14,12 @@ import Utils from "../../utils/functions";
 import {C_Const, C_MULTI_LANG} from '../../utils/constant';
 import RequestData from '../../utils/https/RequestData';
 import Spinner from 'react-native-loading-spinner-overlay';
+import SQLite from 'react-native-sqlite-2';
+
+const db = SQLite.openDatabase('EP.db', '1.0', '', 1);
 
 const PickerItem = Picker.Item;
+//https://github.com/craftzdog/react-native-sqlite-2
 
 class Home extends BaseScreen {
     constructor(props) {
@@ -42,7 +46,8 @@ class Home extends BaseScreen {
         ],      //for searching
         filter_key: 'name',   //default
         keyword: '',
-        user_info: 0
+        user_info: 0,
+        loading_indicator_state: true
   		};
   	}
     //
@@ -79,13 +84,66 @@ class Home extends BaseScreen {
               this.state.data_list.push(list[i]);
             }
           }
+          //insert into local db
+          this._save_data_2_db(list);
+          //
           Toast.show(this.state.user_info.b_name+'님 환영합니다');
+
           Utils.dlog(this.state.data_list);
         } else {
           //something wrong
         }
+        this.setState({loading_indicator_state: false});
       });
   	};
+    //
+    _save_data_2_db = (list) => {
+      db.transaction(function (txn) {
+        txn.executeSql('DROP TABLE IF EXISTS `visitor`', []);
+        var create_table_sql = "CREATE TABLE IF NOT EXISTS `visitor`("
+                + " _id INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + " num VARCHAR(32), "
+                + " name VARCHAR(128), "
+                + " jtype VARCHAR(128), "
+                + " company VARCHAR(128), "
+                + " event DATETIME, "
+                + " dept VARCHAR(128), "
+                + " position VARCHAR(128), "
+                + " hp VARCHAR(32), "
+                + " tel VARCHAR(32), "
+                + " email VARCHAR(64));";
+        // Utils.dlog(create_table_sql);
+        txn.executeSql(create_table_sql, [], function(response, error){
+                  // Utils.xlog('create table', response);
+                  // Utils.xlog('create table', error);
+                }, function (error, bbb){
+                  // Utils.xlog('create table error', error);
+                  // Utils.xlog('create table error', bbb);
+                });
+                //insert
+                var total = list.length;
+                for (var i=0; i<total; i++){
+                  txn.executeSql('INSERT INTO visitor (num, name, jtype, company, event, dept, position, hp, tel, email) VALUES '+
+                      '(:num, :name, :jtype, :company, :event, :dept, :position, :hp, :tel, :email)',
+                      [list[i]['num'], list[i]['name'], list[i]['jtype'], list[i]['company'], list[i]['b_num'],
+                      list[i]['department'], list[i]['position'], list[i]['phone'], list[i]['tel'], list[i]['email']], function(response, error){
+                                // Utils.xlog('insert table', response);
+                                // Utils.xlog('insert table', error);
+                              }, function (error){
+                                // Utils.xlog('insert table error', error);
+                              });
+                }
+          // txn.executeSql('SELECT * FROM `visitor`', [], function (tx, res) {
+          //   Utils.xlog('222', res);
+            // for (let i = 0; i < res.rows.length; ++i) {
+            //   console.log('item:', res.rows.item(i));
+            // }
+          // }, function(aaa, bbb){
+            // Utils.xlog('aaa', aaa);
+            // Utils.xlog('bbb', bbb);
+          // });
+      });
+    };
     //
     //handle actions when user changes city
     _filter_list_change(itemValue, itemIndex){
@@ -139,6 +197,8 @@ class Home extends BaseScreen {
 
         return (
           <Container padder>
+          <Spinner visible={this.state.loading_indicator_state} textStyle={common_styles.whiteColor} />
+
               <ScrollView horizontal={true} showsHorizontalScrollIndicator={true}>
                 <View style={{flexDirection: 'row', marginTop:20}}>
                   <View style={styles.left}>

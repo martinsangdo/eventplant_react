@@ -51,5 +51,6 @@ export const C_Const = {
   //store/Preference keys
   STORE_KEY: {
     USER_INFO: 'USER_INFO',   //include: user_id, jwt
-  }
+  },
+  DB_NAME: 'visitor'
 };

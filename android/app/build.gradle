@@ -137,6 +137,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-sqlite-2')
     compile project(':react-native-vector-icons')
     compile project(':react-native-exit-app')
     compile project(':react-native-device-info')
