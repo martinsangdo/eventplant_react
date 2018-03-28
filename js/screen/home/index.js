@@ -79,7 +79,6 @@ class Home extends BaseScreen {
           this._get_data_list_from_db();
           //
           Toast.show(this.state.user_info.b_name+'님 환영합니다');
-
         } else {
           //something wrong
         }
@@ -130,7 +129,7 @@ class Home extends BaseScreen {
       var me = this;
       db.transaction(function (txn) {
         txn.executeSql('SELECT * FROM `visitor` WHERE event<>"미응모" ORDER BY event DESC', [], function (tx, res) {
-          Utils.xlog('list', res.rows._array);
+          // Utils.xlog('list', res.rows._array);
           var list = res.rows._array;
           var total = list.length;
           me.setState({count: total});
@@ -162,7 +161,7 @@ class Home extends BaseScreen {
       db.transaction(function (txn) {
         var sql = 'SELECT * FROM `visitor` WHERE event<>"미응모" AND '+where+' ORDER BY event DESC';
         txn.executeSql(sql, [], function (tx, res) {
-          Utils.xlog('list', res.rows._array);
+          // Utils.xlog('list', res.rows._array);
           var list = res.rows._array;
           var total = list.length;
           if (total == 0){
@@ -193,7 +192,7 @@ class Home extends BaseScreen {
           me.setState({loading_indicator_state: false});
         }, function(err, detail){
           me.setState({loading_indicator_state: false});
-          Utils.dlog(detail);
+          // Utils.dlog(detail);
         });
       });
 
