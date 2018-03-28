@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {Image, View, Platform, TouchableOpacity, FlatList, ScrollView, Share, WebView, TextInput} from "react-native";
+import {Image, View, Platform, TouchableOpacity, FlatList, ScrollView, Share, WebView, TextInput, Dimensions} from "react-native";
 
 import {Container, Content, Button, Text, Icon, Picker, Item} from "native-base";
 
@@ -17,6 +17,7 @@ import Spinner from 'react-native-loading-spinner-overlay';
 import SQLite from 'react-native-sqlite-2';
 
 const db = SQLite.openDatabase('EP.db', '1.0', '', 1);
+const {windowW, windowH} = Dimensions.get('window');
 
 const PickerItem = Picker.Item;
 //https://github.com/craftzdog/react-native-sqlite-2
@@ -47,7 +48,8 @@ class Home extends BaseScreen {
         filter_key: 'name',   //default selecting
         keyword: '',
         user_info: 0,
-        loading_indicator_state: true
+        loading_indicator_state: true,
+        is_portrait_mode: true
   		};
   	}
     //
@@ -229,6 +231,14 @@ class Home extends BaseScreen {
           <Text style={[common_styles.justifyCenter, {width:80}]}>{item.email}</Text>
   			</View>
     );
+    //
+    DetectOrientation = () => {
+      this.setState({is_portrait_mode: this.state.Height_Layout > this.state.Width_Layout});
+    };
+    //
+    _open_scanner = () => {
+      this.props.navigation.navigate('Camera');
+    };
    //==========
     render() {
       {/* define how to render country list */}
@@ -237,11 +247,12 @@ class Home extends BaseScreen {
       });
 
         return (
-          <Container padder>
-          <Spinner visible={this.state.loading_indicator_state} textStyle={common_styles.whiteColor} />
-
+          <Container padder  onLayout={(event) => this.setState({Width_Layout : event.nativeEvent.layout.width,
+                                                                Height_Layout : event.nativeEvent.layout.height
+                                                                }, ()=> this.DetectOrientation())}>
+            <Spinner visible={this.state.loading_indicator_state} textStyle={common_styles.whiteColor} />
               <ScrollView horizontal={true} showsHorizontalScrollIndicator={true}>
-                <View style={{flexDirection: 'row', marginTop:20, marginBottom:30}}>
+                <View style={{flexDirection: 'row', marginTop:20, marginBottom:this.state.is_portrait_mode?10:70}}>
                   <View style={styles.left}>
                     <Text style={{fontWeight:'bold', fontSize:24, marginLeft:20}}>eventplant</Text>
                     <Text style={{marginLeft:20}}>이벤트응모수({this.state.count})</Text>

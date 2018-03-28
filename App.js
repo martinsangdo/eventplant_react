@@ -24,12 +24,14 @@ import BaseScreen from "./js/base/BaseScreen";
 import Login from "./js/screen/login";
 import Home from "./js/screen/home";
 import Statistic from "./js/screen/home/statistic";
+import Camera from "./js/screen/home/camera";
 
 const AppNavigator = StackNavigator({
         BaseScreen: {screen: BaseScreen},
         Login: {screen: Login},
         Home: {screen: Home},
-        Statistic: {screen: Statistic}
+        Statistic: {screen: Statistic},
+        Camera: {screen: Camera}
     },
     {
         initialRouteName: "Home",   //open this page first time
