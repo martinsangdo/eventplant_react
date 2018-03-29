@@ -280,7 +280,7 @@ class Home extends BaseScreen {
                                                                 }, ()=> this.DetectOrientation())}>
             <Spinner visible={this.state.loading_indicator_state} textStyle={common_styles.whiteColor} />
               <ScrollView horizontal={true} showsHorizontalScrollIndicator={true}>
-                <View style={{flexDirection: 'row', marginTop:20, marginBottom:this.state.is_portrait_mode?10:70}}>
+                <View style={{flexDirection: 'row', marginTop:20, marginBottom:this.state.is_portrait_mode?30:70}}>
                   <View style={styles.left}>
                     <Text style={{fontWeight:'bold', fontSize:24, marginLeft:20}}>eventplant</Text>
                     <Text style={{marginLeft:20}}>이벤트응모수({this.state.count})</Text>
