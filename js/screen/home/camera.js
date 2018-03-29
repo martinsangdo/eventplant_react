@@ -19,7 +19,8 @@ class Camera extends BaseScreen {
   constructor(props) {
     super(props);
     this.state = {
-      // current_code: 
+      is_saving_code: false,    //lock reading barcode many times
+
     };
   }
     //like onload event
@@ -29,7 +30,9 @@ class Camera extends BaseScreen {
     //
     _detected_code = (code) => {
       Utils.dlog('detected: ' + code);
-
+      if (this.state.is_saving_code){
+        return;
+      }
     };
    //==========
     render() {
