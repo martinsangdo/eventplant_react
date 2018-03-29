@@ -18,7 +18,14 @@ export default {
   header_table: {backgroundColor: '#ccc', flexDirection: 'row'},
   list_item: {flexDirection: 'row'},
   data_table: {flexDirection: 'row'},
+  camera_container: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: deviceHeight - 200,
+    backgroundColor: '#fff'
+  },
   preview: {
-    height: deviceHeight - 80
+    width: 300,
+    height: 200
   }
 };

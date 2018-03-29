@@ -78,17 +78,17 @@ class Home extends BaseScreen {
           //success
           //insert into local db
           this._save_data_2_db(response.results);
-          this._get_data_list_from_db();
           //
           Toast.show(this.state.user_info.b_name+'님 환영합니다');
         } else {
           //something wrong
+          this.setState({loading_indicator_state: false});
         }
-        this.setState({loading_indicator_state: false});
       });
   	};
     //
     _save_data_2_db = (list) => {
+      var me = this;
       db.transaction(function (txn) {
         txn.executeSql('DROP TABLE IF EXISTS `visitor`', []);
         var create_table_sql = "CREATE TABLE IF NOT EXISTS `visitor`("
@@ -105,25 +105,24 @@ class Home extends BaseScreen {
                 + " email VARCHAR(64));";
         // Utils.dlog(create_table_sql);
         txn.executeSql(create_table_sql, [], function(response, error){
-                  // Utils.xlog('create table', response);
-                  // Utils.xlog('create table', error);
+                  //insert data
+                  var total = list.length;
+                  for (var i=0; i<total; i++){
+                    txn.executeSql('INSERT INTO visitor (num, name, jtype, company, event, dept, position, hp, tel, email) VALUES '+
+                        '(:num, :name, :jtype, :company, :event, :dept, :position, :hp, :tel, :email)',
+                        [list[i]['num'], list[i]['name'], list[i]['jtype'], list[i]['company'], list[i]['b_num'],
+                        list[i]['department'], list[i]['position'], list[i]['phone'], list[i]['tel'], list[i]['email']], function(response, error){
+                                  // Utils.xlog('insert table', response);
+                                  // Utils.xlog('insert table', error);
+                                }, function (error){
+                                  // Utils.xlog('insert table error', error);
+                                });
+                  }
+                  me._get_data_list_from_db();
                 }, function (error, bbb){
                   // Utils.xlog('create table error', error);
                   // Utils.xlog('create table error', bbb);
                 });
-                //insert
-                var total = list.length;
-                for (var i=0; i<total; i++){
-                  txn.executeSql('INSERT INTO visitor (num, name, jtype, company, event, dept, position, hp, tel, email) VALUES '+
-                      '(:num, :name, :jtype, :company, :event, :dept, :position, :hp, :tel, :email)',
-                      [list[i]['num'], list[i]['name'], list[i]['jtype'], list[i]['company'], list[i]['b_num'],
-                      list[i]['department'], list[i]['position'], list[i]['phone'], list[i]['tel'], list[i]['email']], function(response, error){
-                                // Utils.xlog('insert table', response);
-                                // Utils.xlog('insert table', error);
-                              }, function (error){
-                                // Utils.xlog('insert table error', error);
-                              });
-                }
       });
     };
     //sort by event date
@@ -140,7 +139,9 @@ class Home extends BaseScreen {
             list[i]['index'] = idx--;
             me.state.data_list.push(list[i]);
           }
+          me.setState({loading_indicator_state: false});
         }, function(err, detail){
+          me.setState({loading_indicator_state: false});
         });
       });
     };
