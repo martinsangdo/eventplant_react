@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {Image, View, Platform, Alert, NetInfo, TextInput, TouchableOpacity} from "react-native";
+import {Image, View, Platform, Alert, NetInfo, TextInput, TouchableOpacity, Dimensions} from "react-native";
 
 import {Container, Content, Button, Text, Header, Title, Body, Left, Right, Icon} from "native-base";
 import BaseScreen from "../../base/BaseScreen.js";
@@ -12,11 +12,14 @@ import {C_Const} from '../../utils/constant';
 import RequestData from '../../utils/https/RequestData';
 import Toast from 'react-native-root-toast';
 import store from 'react-native-simple-store';
+import CameraScanner from 'react-native-camera';
+const {windowW, windowH} = Dimensions.get('window');
 
 class Camera extends BaseScreen {
   constructor(props) {
     super(props);
     this.state = {
+      // current_code: 
     };
   }
     //like onload event
@@ -24,6 +27,10 @@ class Camera extends BaseScreen {
 
     }
     //
+    _detected_code = (code) => {
+      Utils.dlog('detected: ' + code);
+
+    };
    //==========
     render() {
         return (
@@ -50,8 +57,15 @@ class Camera extends BaseScreen {
               {/* END header */}
 
               <Content>
-                <View>
+              <View>
 
+                <CameraScanner
+                    style={styles.preview}
+                    onBarCodeRead={(e) => this._detected_code(e.data)}
+                    ref={cam => this.camera = cam}
+                    aspect={CameraScanner.constants.Aspect.fill}
+                    >
+                  </CameraScanner>
                 </View>
               </Content>
             </Container>

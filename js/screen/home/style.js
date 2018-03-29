@@ -17,5 +17,8 @@ export default {
   },
   header_table: {backgroundColor: '#ccc', flexDirection: 'row'},
   list_item: {flexDirection: 'row'},
-  data_table: {flexDirection: 'row'}
+  data_table: {flexDirection: 'row'},
+  preview: {
+    height: deviceHeight - 80
+  }
 };
