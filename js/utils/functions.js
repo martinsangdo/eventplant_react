@@ -98,7 +98,12 @@ exports.my_fetch = function(url, method, body){
 //
 exports.formatDate = function(date){
   Moment.locale('en');
-  return Moment(date).format(C_Const.DATE_FORMAT);
+  return Moment(date).format(C_Const.NOTIFICATION_DATE_FORMAT);
+};
+//
+exports.formatDateVisitor = function(date){
+  Moment.locale('en');
+  return Moment(date).format(C_Const.VISITOR_DATE_FORMAT);
 };
 //https://momentjs.com/docs/#/customization/
 exports.formatCourseDate = function(lang_key, date){

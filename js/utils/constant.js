@@ -30,8 +30,8 @@ export const C_Const = {
   IOS: 'IOS',
   SPLASH_TIMER: 1000,   //time to display splash screen
   MAX_SPLASH_TIMER: 30000,   //maximum time to display splash screen
-  DATE_FORMAT: 'YYYY-MM-DD',   //birthday format
-  NOTIFICATION_DATE_FORMAT: 'YYYY-MM-DD HH:mm:ss',
+  VISITOR_DATE_FORMAT: 'YYYY-MM-DD HH:mm:ss',   //birthday format
+  NOTIFICATION_DATE_FORMAT: 'YYYY/MM/DD HH:mm:ss',
   COURSE_DATE_FORMAT: 'DD MMMM YYYY, dddd',
   PAGE_LEN: 10, //default item number in one page, should large enough to load more item
   EMPTY_DATETIME: '0000-00-00 00:00:00',

@@ -53,9 +53,9 @@ class Camera extends BaseScreen {
           this._upsert_code_2_db(code, response);
         }
         //avoid scan many times
-        // setTimeout(() => {
-        //   this.setState({is_saving_code: false});
-        // }, 2000);
+        setTimeout(() => {
+          this.setState({is_saving_code: false});
+        }, 2000);
       });
     };
     //
@@ -66,14 +66,14 @@ class Camera extends BaseScreen {
         txn.executeSql(search_sql, [], function(tx, res){
                 if (res.rows.length > 0){
                   //found, update it
-                  var update_sql = 'UPDATE visitor SET event="'+(new Date())+'" WHERE NUM="'+code+'"';
+                  var update_sql = 'UPDATE visitor SET event="'+Utils.formatDateVisitor(new Date())+'" WHERE NUM="'+code+'"';
                   txn.executeSql(update_sql, [], function(tx, res){
                     Utils.dlog('after update visitor');
                     me._update_history(resp.name, code);
                   });
                 } else {
                   //not found, insert it
-                  var insert_sql = 'INSERT INTO visitor (name, event, num) values ("'+resp.name+'","'+(new Date())+'", "'+code+'")';
+                  var insert_sql = 'INSERT INTO visitor (name, event, num) values ("'+resp.name+'","'+Utils.formatDateVisitor(new Date())+'", "'+code+'")';
                   txn.executeSql(insert_sql, [], function(tx, res){
                     Utils.dlog('after insert visitor');
                     me._update_history(resp.name, code);
@@ -85,10 +85,11 @@ class Camera extends BaseScreen {
     };
     //
     _update_history = (name, code) => {
+      var me = this;
       //check if table "history" exists
       db.transaction(function (txn) {
         var check_table_exist = 'SELECT name FROM sqlite_master WHERE type="table" AND name="history"';
-        var insert_sql = 'INSERT INTO history (name, event, num) values ("'+name+'","'+(new Date())+'", "'+code+'")';
+        var insert_sql = 'INSERT INTO history (name, event, num, cam_idx) values ("'+name+'","'+(new Date())+'", "'+code+'", '+me.state.user_info.cam_idx+')';
         txn.executeSql(check_table_exist, [], function(tx, res){
                 if (res.rows.length == 0){
                   //create table
@@ -96,7 +97,8 @@ class Camera extends BaseScreen {
                           + " _id INTEGER PRIMARY KEY AUTOINCREMENT, "
                           + " num VARCHAR(32), "
                           + " name VARCHAR(128), "
-                          + " event DATETIME);";
+                          + " event DATETIME, "
+                          + " cam_idx INTEGER);";
                   //insert into db
                   txn.executeSql(create_table_sql, [], function(tx, res){
                     Utils.dlog('create_table_sql');
@@ -120,6 +122,10 @@ class Camera extends BaseScreen {
               });
       });
     };
+    //
+    _go_history = () => {
+      this.props.navigation.navigate('History', {user_info: this.state.user_info});
+    };
    //==========
     render() {
         return (
@@ -138,7 +144,7 @@ class Camera extends BaseScreen {
                 </Body>
                 <Right style={styles.right}>
                   <Icon name="ios-clock-outline" style={styles.header_icon}/>
-                  <TouchableOpacity style={{justifyContent:'center'}}>
+                  <TouchableOpacity style={{justifyContent:'center'}} onPress={() => this._go_history()}>
                     <Text style={{marginBottom:5, marginLeft:10}}>HISTORY</Text>
                   </TouchableOpacity>
                 </Right>

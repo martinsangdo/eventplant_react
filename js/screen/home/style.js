@@ -27,5 +27,7 @@ export default {
   preview: {
     width: 300,
     height: 200
-  }
+  },
+  history_list_item: {borderBottomColor: '#eee', borderBottomWidth: 1},
+  
 };

@@ -212,17 +212,44 @@ class Home extends BaseScreen {
     //
     _refresh_list = () => {
       Utils.dlog('_refresh_list');
+      var me = this;
+      db.transaction(function (txn) {
+        txn.executeSql('SELECT * FROM `visitor` WHERE event<>"미응모" ORDER BY event DESC', [], function (tx, res) {
+          me.setState({data_list: [{
+            index: '순번',
+            num: '관리번호',
+            name: '성명',
+            jtype: '등록구분',
+            company: '소속',
+            event: '이벤트응모',
+            department: '부서',
+            position: '직위',
+            phone: 'HP',
+            tel: 'Tel',
+            email: 'Email'
+          }]});
+          // Utils.xlog('list', res.rows._array);
+          var list = res.rows._array;
+          var total = list.length;
+          me.setState({count: total});
+          var idx = total;
+          for (var i=0; i<total; i++){
+            list[i]['index'] = idx--;
+            me.state.data_list.push(list[i]);
+          }
+        }, function(err, detail){
+        });
+      });
     };
-    //
     //
     _keyExtractor = (item) => item.index;
   	//render the list. MUST use "item" as param
   	_renderItem = ({item}) => (
   			<View style={[styles.list_item, (item.index=='순번'?common_styles.grayBg:(item.index%2==1?common_styles.litegrayBg:common_styles.whiteBg))]}>
           <Text style={[common_styles.justifyCenter, {width:50}]}>{item.index}</Text>
-          <Text style={[common_styles.justifyCenter, {width:100}]}>{item.num}</Text>
+          <Text style={[common_styles.justifyCenter, {width:120}]}>{item.num}</Text>
           <Text style={[common_styles.justifyCenter, {width:100}]}>{item.name}</Text>
-          <Text style={[common_styles.justifyCenter, {width:100}]}>{item.jtype}</Text>
+          <Text style={[common_styles.justifyCenter, {width:80}]}>{item.jtype}</Text>
           <Text style={[common_styles.justifyCenter, {width:150}]}>{item.company}</Text>
           <Text style={[common_styles.justifyCenter, {width:200}]}>{item.event}</Text>
           <Text style={[common_styles.justifyCenter, {width:100}]}>{item.department}</Text>
