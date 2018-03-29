@@ -237,7 +237,7 @@ class Home extends BaseScreen {
     };
     //
     _open_scanner = () => {
-      this.props.navigation.navigate('Camera');
+      this.props.navigation.navigate('Camera', {user_info: this.state.user_info});
     };
    //==========
     render() {
