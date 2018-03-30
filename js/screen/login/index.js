@@ -92,7 +92,7 @@ class Login extends BaseScreen {
                       </TouchableOpacity>
                     </View>
                     <View style={[common_styles.view_align_center, {marginTop:30}]}>
-                      <Text style={{width:300}}>* 이메일로 받으신 ID와 PW를 입력해주 세요.</Text>
+                      <Text style={{width:300}}>* 이메일로 받으신 ID와 PW를 입력해주세요.</Text>
                     </View>
                     <View style={[common_styles.view_align_center]}>
                       <Text style={{width:300}}>* Premium 버전에 관심이 있으신 분이나, ID와 PW를 분실하신 경우 관리자 (event@eventplant.co.kr)에게 연락해주세요.</Text>
