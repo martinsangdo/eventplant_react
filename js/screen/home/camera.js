@@ -153,7 +153,7 @@ class Camera extends BaseScreen {
     render() {
         return (
             <Container>
-              <Header style={[common_styles.header, common_styles.whiteBg]}>
+              <Header style={[common_styles.header, common_styles.whiteBg, {maxHeight:80}]}>
                 <Left style={{flex:0.3, flexDirection: 'row'}}>
                   <TouchableOpacity onPress={() => this._go_back()}>
                     <Icon name="ios-arrow-back-outline" style={styles.header_icon}/>
@@ -174,7 +174,7 @@ class Camera extends BaseScreen {
               {/* END header */}
 
               <Content>
-                <View style={{marginTop:30}} />
+                <View style={{marginTop:20}} />
                 <View style={[styles.camera_container, {height: windowW>windowH?windowH:windowW}]}>
                   <CameraScanner
                     style={styles.preview}
@@ -185,7 +185,7 @@ class Camera extends BaseScreen {
                     <View style={{height:2, backgroundColor: '#f00', width:300, marginTop:100}}></View>
                   </CameraScanner>
                 </View>
-                <View style={{marginTop:30}} />
+                <View style={{marginTop:20}} />
                 <View style={[common_styles.view_align_center, {alignSelf:'center', justifyContent: 'center'}]}>
                   <Text>사각형 영역 안에 바코드를 위치해주세요.</Text>
                 </View>

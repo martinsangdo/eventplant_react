@@ -280,7 +280,7 @@ class Home extends BaseScreen {
                                                                 Height_Layout : event.nativeEvent.layout.height
                                                                 }, ()=> this.DetectOrientation())}>
             <Spinner visible={this.state.loading_indicator_state} textStyle={common_styles.whiteColor} />
-              <ScrollView horizontal={true} showsHorizontalScrollIndicator={true}>
+              <ScrollView horizontal={true} showsHorizontalScrollIndicator={true} style={{maxHeight:this.state.is_portrait_mode?150:200}}>
                 <View style={{flexDirection: 'row', marginTop:20, marginBottom:this.state.is_portrait_mode?30:70}}>
                   <View style={styles.left}>
                     <Text style={{fontWeight:'bold', fontSize:24, marginLeft:20}}>eventplant</Text>
