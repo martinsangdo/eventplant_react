@@ -36,7 +36,7 @@ const AppNavigator = StackNavigator({
         History: {screen: History}
     },
     {
-        initialRouteName: "Home",   //open this page first time
+        initialRouteName: "Login",   //open this page first time
         headerMode: "none",
         cardStyle: {
           paddingTop: 20, //iOS
