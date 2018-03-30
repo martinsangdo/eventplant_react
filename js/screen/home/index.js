@@ -155,14 +155,15 @@ class Home extends BaseScreen {
     //
     _begin_search = () => {
       if (Utils.isEmpty(this.state.keyword)){
-        Toast.show('Must type something');
-        return;
+        //show all
+        var sql = 'SELECT * FROM `visitor` WHERE event<>"미응모" ORDER BY event DESC';
+      } else {
+        var where = this.state.filter_key + ' LIKE "%'+this.state.keyword+'%"';
+        var sql = 'SELECT * FROM `visitor` WHERE event<>"미응모" AND '+where+' ORDER BY event DESC';
       }
       this.setState({loading_indicator_state: true});
-      var where = this.state.filter_key + ' LIKE "%'+this.state.keyword+'%"';
       var me = this;
       db.transaction(function (txn) {
-        var sql = 'SELECT * FROM `visitor` WHERE event<>"미응모" AND '+where+' ORDER BY event DESC';
         txn.executeSql(sql, [], function (tx, res) {
           // Utils.xlog('list', res.rows._array);
           var list = res.rows._array;
@@ -204,7 +205,7 @@ class Home extends BaseScreen {
     _open_statistic = () => {
       this.props.navigation.navigate('Statistic', {
         link: 'http://eventplant.cafe24.com/app/stats.html?cam_idx='+
-            this.state.cam_idx+'&b_id='+this.state.b_id
+            this.state.user_info.cam_idx+'&b_id='+this.state.user_info.b_id
       });
     };
     //
@@ -299,25 +300,26 @@ class Home extends BaseScreen {
                       <Icon name="md-arrow-dropdown" style={{marginTop:5}}/>
                       <TextInput style={{borderBottomColor:'#5499C7', borderBottomWidth:1, width:160, marginLeft:10, marginRight:10}}
                        autoCapitalize="none" onChange={(event) => this.setState({keyword: event.nativeEvent.text})}/>
-                       <TouchableOpacity onPress={()=>this._begin_search()}
-                         style={{width:80, height: 50, backgroundColor: '#ccc',justifyContent: 'center', alignItems: 'center', borderRadius:6}}>
-                         <Text>검색</Text>
-                       </TouchableOpacity>
                     </View>
                   </View>
                   <View style={{flexDirection: 'column', marginLeft: 20}}>
+                    <TouchableOpacity onPress={()=>this._refresh_list()} style={{alignSelf: 'flex-end', marginBottom:10}}>
+                      <Icon name="ios-refresh"/>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={()=>this._begin_search()}
+                      style={{width:80, height: 50, backgroundColor: '#ccc',justifyContent: 'center', alignItems: 'center', borderRadius:6}}>
+                      <Text>검색</Text>
+                    </TouchableOpacity>
+                  </View>
+                  <View style={{flexDirection: 'column', marginLeft: 20, marginRight:10}}>
                     <TouchableOpacity onPress={()=>this._open_scanner()}
                       style={{width:100, height: 50, backgroundColor: '#555',justifyContent: 'center', alignItems: 'center', borderRadius:6}}>
-                      <Text>바코드스캔</Text>
+                      <Text style={{color: '#fff'}}>바코드스캔</Text>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={()=>this._open_statistic()}
                       style={{width:100, height: 50, backgroundColor: '#555',justifyContent: 'center', alignItems: 'center', borderRadius:6, marginTop:2}}>
-                      <Text>통계보기</Text>
+                      <Text style={{color: '#fff'}}>통계보기</Text>
                     </TouchableOpacity>
-                  </View>
-                  <View style={{justifyContent:'center', alignItems: 'center', marginLeft:10}}>
-                    <Text>화면을 아래로 내리면</Text>
-                    <Text>DB가 새로고침 됩니다.</Text>
                   </View>
                 </View>
               </ScrollView>

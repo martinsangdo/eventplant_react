@@ -17,6 +17,7 @@ import SQLite from 'react-native-sqlite-2';
 
 const {windowW, windowH} = Dimensions.get('window');
 const db = SQLite.openDatabase('EP.db', '1.0', '', 1);
+const launchscreenLogo = require("../../../img/event_plant.png");
 
 class Camera extends BaseScreen {
   constructor(props) {
@@ -131,18 +132,17 @@ class Camera extends BaseScreen {
         return (
             <Container>
               <Header style={[common_styles.header, common_styles.whiteBg]}>
-                <Left style={styles.left}>
+                <Left style={{flex:0.3, flexDirection: 'row'}}>
                   <TouchableOpacity onPress={() => this.props.navigation.goBack()}>
-                    <View style={styles.left_row}>
-                      <View style={[common_styles.float_center]}>
-                        <Icon name="ios-arrow-back-outline" style={styles.header_icon}/>
-                      </View>
-                    </View>
+                    <Icon name="ios-arrow-back-outline" style={styles.header_icon}/>
                   </TouchableOpacity>
+                  <Image source={launchscreenLogo} style={{width:35, height:35, marginLeft:5}}/>
+                  <Text style={{marginLeft:5, fontWeight:'bold', marginTop:5}}>Barcode Scanner</Text>
                 </Left>
-                <Body style={styles.headerBody}>
+                <Body style={[styles.headerBody, {flex:0.8}]}>
+                  <Text>약 15cm 정도의 거리에서 바코드스캔을 부탁드립니다!</Text>
                 </Body>
-                <Right style={styles.right}>
+                <Right style={{flex:0.2}}>
                   <Icon name="ios-clock-outline" style={styles.header_icon}/>
                   <TouchableOpacity style={{justifyContent:'center'}} onPress={() => this._go_history()}>
                     <Text style={{marginBottom:5, marginLeft:10}}>HISTORY</Text>
@@ -152,9 +152,7 @@ class Camera extends BaseScreen {
               {/* END header */}
 
               <Content>
-                <View style={[common_styles.view_align_center, {marginBottom:10}]}>
-                  <Text>Place a barcode about 15cm away from camera</Text>
-                </View>
+                <View style={{marginTop:30}} />
                 <View style={styles.camera_container}>
                   <CameraScanner
                     style={styles.preview}
@@ -162,10 +160,12 @@ class Camera extends BaseScreen {
                     ref={cam => this.camera = cam}
                     aspect={CameraScanner.constants.Aspect.fill}
                     >
+                    <View style={{height:2, backgroundColor: '#f00', width:300, marginTop:100}}></View>
                   </CameraScanner>
                 </View>
+                <View style={{marginTop:30}} />
                 <View style={[common_styles.view_align_center, {alignSelf:'center', justifyContent: 'center'}]}>
-                  <Text>Place a barcode inside the viewfinder rectangle to scan it</Text>
+                  <Text>사각형 영역 안에 바코드를 위치해주세요.</Text>
                 </View>
               </Content>
             </Container>
