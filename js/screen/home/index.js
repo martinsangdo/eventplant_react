@@ -303,11 +303,12 @@ class Home extends BaseScreen {
                     </View>
                   </View>
                   <View style={{flexDirection: 'column', marginLeft: 20}}>
-                    <TouchableOpacity onPress={()=>this._refresh_list()} style={{alignSelf: 'flex-end', marginBottom:10}}>
+                    <TouchableOpacity onPress={()=>this._refresh_list()}
+                      style={{width:80, height: 50, backgroundColor: '#fff',justifyContent: 'center', alignItems: 'center'}}>
                       <Icon name="ios-refresh"/>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={()=>this._begin_search()}
-                      style={{width:80, height: 50, backgroundColor: '#ccc',justifyContent: 'center', alignItems: 'center', borderRadius:6}}>
+                      style={{width:80, height: 50, backgroundColor: '#ccc',justifyContent: 'center', alignItems: 'center', borderRadius:6, marginTop:2}}>
                       <Text>검색</Text>
                     </TouchableOpacity>
                   </View>

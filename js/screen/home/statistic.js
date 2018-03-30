@@ -38,7 +38,7 @@ class Statistic extends BaseScreen {
             </Header>
             {/* END header */}
 
-            <Content>
+            <Content style={{height:'100%'}}>
               <WebView
                 source={{uri: this.props.navigation.state.params.link}}
                 style={styles.webview}

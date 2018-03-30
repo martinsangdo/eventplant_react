@@ -153,9 +153,9 @@ class Camera extends BaseScreen {
     render() {
         return (
             <Container>
-              <Header style={[common_styles.header, common_styles.whiteBg, {maxHeight:80}]}>
+              <Header style={[common_styles.header, common_styles.whiteBg, {maxHeight:50}]}>
                 <Left style={{flex:0.3, flexDirection: 'row'}}>
-                  <TouchableOpacity onPress={() => this._go_back()}>
+                  <TouchableOpacity onPress={() => this._go_back()} style={{width:40}}>
                     <Icon name="ios-arrow-back-outline" style={styles.header_icon}/>
                   </TouchableOpacity>
                   <Image source={launchscreenLogo} style={{width:35, height:35, marginLeft:5}}/>
