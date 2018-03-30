@@ -21,7 +21,7 @@ export default {
   camera_container: {
     justifyContent: 'center',
     alignItems: 'center',
-    height: deviceHeight - 200,
+    height: deviceWidth - 100,
     backgroundColor: '#fff'
   },
   preview: {
@@ -29,5 +29,5 @@ export default {
     height: 200
   },
   history_list_item: {borderBottomColor: '#eee', borderBottomWidth: 1},
-  
+
 };

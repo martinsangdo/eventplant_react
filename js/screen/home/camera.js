@@ -14,6 +14,7 @@ import Toast from 'react-native-root-toast';
 import store from 'react-native-simple-store';
 import CameraScanner from 'react-native-camera';
 import SQLite from 'react-native-sqlite-2';
+import Orientation from 'react-native-orientation';
 
 const {windowW, windowH} = Dimensions.get('window');
 const db = SQLite.openDatabase('EP.db', '1.0', '', 1);
@@ -27,10 +28,23 @@ class Camera extends BaseScreen {
       user_info: {}
     };
   }
+    componentWillMount() {
+      Orientation.lockToLandscape();
+    }
     //like onload event
     componentDidMount() {
       this.setState({user_info: this.props.navigation.state.params.user_info});
+      Orientation.lockToLandscape();
+      Orientation.addOrientationListener(this._orientationDidChange);
     }
+    componentWillUnmount() {
+      Orientation.removeOrientationListener(this._orientationDidChange);
+      Orientation.unlockAllOrientations();
+    }
+    //
+    _orientationDidChange = () => {
+      Orientation.lockToLandscape();    //force to lock
+    };
     //
     _detected_code = (code) => {
       if (this.state.is_saving_code){
@@ -125,7 +139,15 @@ class Camera extends BaseScreen {
     };
     //
     _go_history = () => {
+      Orientation.removeOrientationListener(this._orientationDidChange);
+      Orientation.unlockAllOrientations();
       this.props.navigation.navigate('History', {user_info: this.state.user_info});
+    };
+    //
+    _go_back = () => {
+      Orientation.removeOrientationListener(this._orientationDidChange);
+      Orientation.unlockAllOrientations();
+      this.props.navigation.goBack();
     };
    //==========
     render() {
@@ -133,7 +155,7 @@ class Camera extends BaseScreen {
             <Container>
               <Header style={[common_styles.header, common_styles.whiteBg]}>
                 <Left style={{flex:0.3, flexDirection: 'row'}}>
-                  <TouchableOpacity onPress={() => this.props.navigation.goBack()}>
+                  <TouchableOpacity onPress={() => this._go_back()}>
                     <Icon name="ios-arrow-back-outline" style={styles.header_icon}/>
                   </TouchableOpacity>
                   <Image source={launchscreenLogo} style={{width:35, height:35, marginLeft:5}}/>
@@ -153,7 +175,7 @@ class Camera extends BaseScreen {
 
               <Content>
                 <View style={{marginTop:30}} />
-                <View style={styles.camera_container}>
+                <View style={[styles.camera_container, {height: windowW>windowH?windowH:windowW}]}>
                   <CameraScanner
                     style={styles.preview}
                     onBarCodeRead={(e) => this._detected_code(e.data)}

@@ -3,6 +3,8 @@ package com.eventplant;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.github.yamill.orientation.OrientationPackage;
+import org.reactnative.camera.RNCameraPackage;
 import org.reactnative.camera.RNCameraPackage;
 import dog.craftz.sqlite_2.RNSqlite2Package;
 import com.oblador.vectoricons.VectorIconsPackage;
@@ -29,6 +31,8 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new OrientationPackage(),
+            new RNCameraPackage(),
             new RNCameraPackage(),
             new RNSqlite2Package(),
             new VectorIconsPackage(),

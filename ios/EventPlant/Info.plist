@@ -40,7 +40,7 @@
 		</dict>
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
+	<string/>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Entypo.ttf</string>
@@ -76,9 +76,9 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-  <key>NSCameraUsageDescription</key>
-  <string>Used for barcode scanner</string>
-  <key>NSPhotoLibraryUsageDescription</key>
-  <string>Used for barcode scanner</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Used for barcode scanner</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Used for barcode scanner</string>
 </dict>
 </plist>
