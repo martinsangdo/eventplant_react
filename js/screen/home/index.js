@@ -226,6 +226,36 @@ class Home extends BaseScreen {
 				email: 'Email'
 			}]});
 			this._load_data();
+			/*
+			var me = this;
+			db.transaction(function (txn) {
+				txn.executeSql('SELECT * FROM `visitor` WHERE event<>"미응모" ORDER BY event DESC', [], function (tx, res) {
+					me.setState({data_list: [{
+						index: '순번',
+						num: '관리번호',
+						name: '성명',
+						jtype: '등록구분',
+						company: '소속',
+						event: '이벤트응모',
+						department: '부서',
+						position: '직위',
+						phone: 'HP',
+						tel: 'Tel',
+						email: 'Email'
+					}]});
+					// Utils.xlog('list', res.rows._array);
+					var list = res.rows._array;
+					var total = list.length;
+					me.setState({count: total});
+					var idx = total;
+					for (var i=0; i<total; i++){
+						list[i]['index'] = idx--;
+						me.state.data_list.push(list[i]);
+					}
+				}, function(err, detail){
+				});
+			});
+			*/
 		};
 		//
 		_keyExtractor = (item) => item.index;

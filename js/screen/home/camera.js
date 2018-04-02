@@ -92,7 +92,7 @@ class Camera extends BaseScreen {
 			var uri = 'http://eventplant.cafe24.com/app/scan.php?cam_idx='+this.state.user_info.cam_idx+'&num='+code+'&b_id='+this.state.user_info.b_id;
 			Utils.xlog('save code uri', uri);
 			RequestData.sentGetRequest(uri, (response, error) => {
-				Utils.dlog(response);
+				// Utils.dlog(response);
 				if (!Utils.isEmpty(response)){
 					Vibration.vibrate(1000);
 					Toast.show(response.num+'번 '+response.name+'님 이벤트 확인');
@@ -115,14 +115,14 @@ class Camera extends BaseScreen {
 									//found, update it
 									var update_sql = 'UPDATE visitor SET event="'+Utils.formatDateVisitor(new Date())+'" WHERE NUM="'+code+'"';
 									txn.executeSql(update_sql, [], function(tx, res){
-										Utils.dlog('after update visitor');
+										// Utils.dlog('after update visitor');
 										me._update_history(resp.name, code);
 									});
 								} else {
 									//not found, insert it
 									var insert_sql = 'INSERT INTO visitor (name, event, num) values ("'+resp.name+'","'+Utils.formatDateVisitor(new Date())+'", "'+code+'")';
 									txn.executeSql(insert_sql, [], function(tx, res){
-										Utils.dlog('after insert visitor');
+										// Utils.dlog('after insert visitor');
 										me._update_history(resp.name, code);
 									});
 								}
