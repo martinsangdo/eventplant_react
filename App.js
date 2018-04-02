@@ -5,14 +5,14 @@
 import React, {Component} from 'react';
 import {Root, Icon, Badge} from "native-base";
 import {
-    Platform,
-    StyleSheet,
-    Text,
-    View
+		Platform,
+		StyleSheet,
+		Text,
+		View
 } from 'react-native';
 
 import {
-    StackNavigator
+		StackNavigator
 } from 'react-navigation';
 import common_styles from "./css/common";
 import {C_Const, C_MULTI_LANG} from './js/utils/constant';
@@ -28,36 +28,36 @@ import Camera from "./js/screen/home/camera";
 import History from "./js/screen/home/history";
 
 const AppNavigator = StackNavigator({
-        BaseScreen: {screen: BaseScreen},
-        Login: {screen: Login},
-        Home: {screen: Home},
-        Statistic: {screen: Statistic},
-        Camera: {screen: Camera},
-        History: {screen: History}
-    },
-    {
-        initialRouteName: "Login",   //open this page first time
-        headerMode: "none",
-        cardStyle: {
-          paddingTop: 20, //iOS
-          backgroundColor: '#fff'
-        }
-    });
+				BaseScreen: {screen: BaseScreen},
+				Login: {screen: Login},
+				Home: {screen: Home},
+				Statistic: {screen: Statistic},
+				Camera: {screen: Camera},
+				History: {screen: History}
+		},
+		{
+				initialRouteName: "Login",   //open this page first time
+				headerMode: "none",
+				cardStyle: {
+					paddingTop: 20, //iOS
+					backgroundColor: '#fff'
+				}
+		});
 
 export default class App extends Component{
-  constructor(props) {
-    super(props);
-  }
+	constructor(props) {
+		super(props);
+	}
 
-  componentDidMount() {
-    console.ignoredYellowBox = ['Remote debugger'];   //don't show warning in app when debugging
-  }
-  //
-  render() {
-    return (
-      <Root>
-          <AppNavigator/>
-      </Root>
-    )
-  }
+	componentDidMount() {
+		console.ignoredYellowBox = ['Remote debugger'];   //don't show warning in app when debugging
+	}
+	//
+	render() {
+		return (
+			<Root>
+					<AppNavigator/>
+			</Root>
+		)
+	}
 }
